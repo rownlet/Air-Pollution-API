@@ -24,8 +24,8 @@ Para configurar el proyecto, siga estos pasos:
 ### Instalación
 1. Clone el repositorio en su máquina local:
     ```sh
-    git clone https://github.com/tu-repo/analisis-datos-contaminacion-aire.git
-    cd analisis-datos-contaminacion-aire
+    git clone https://github.com/rownlet/Air-Pollution-API.git
+    cd Air-Pollution-API
     ```
 
 2. Instale las bibliotecas de Python necesarias:
@@ -68,13 +68,10 @@ Si desea basarse en los datos o en este proyecto para crear un nuevo proyecto, a
 No dude en abrir un issue o enviar una pull request con sus sugerencias.
 
 ## Contribuciones
-Si desea contribuir a este proyecto, siga estos pasos:
+Si desea contribuir al proyecto, siga estos pasos:
 
 1. Haga un fork del repositorio.
 2. Cree una nueva rama (`git checkout -b feature-branch`).
 3. Realice sus cambios y haga commit (`git commit -am 'Agregar nueva característica'`).
 4. Empuje a la rama (`git push origin feature-branch`).
 5. Cree una nueva Pull Request.
-
-## Agradecimientos
-Nos gustaría agradecer a los desarrolladores de las bibliotecas y herramientas utilizadas en este proyecto, y a la comunidad por su apoyo continuo y contribuciones.
