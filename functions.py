@@ -71,7 +71,8 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
                 so2 FLOAT,
                 pm_2_5 FLOAT,
                 pm_10 FLOAT,
-                nh3 FLOAT
+                nh3 FLOAT,
+                ingestion_time TIMESTAMP DEFAULT GETDATE()
             )
         """)
         conn.commit()
