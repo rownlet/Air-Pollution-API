@@ -6,7 +6,7 @@ Este proyecto tiene como objetivo analizar datos de contaminación del aire extr
 ## Estructura del Proyecto
 El proyecto consta de los siguientes archivos:
 
-- `air_pollution_data_analysis.ipynb`: Cuaderno de Jupyter para ejecutar los procesos de extracción, transformación y carga de datos.
+- `air_pollution_etl.ipynb`: Cuaderno de Jupyter para ejecutar los procesos de extracción, transformación y carga de datos.
 - `functions.py`: Script en Python que contiene las funciones utilizadas para extraer datos de la API, transformar los datos y cargarlos en Redshift.
 - `pwd_redshift.txt`: Archivo de texto que contiene la contraseña para la base de datos Redshift.
 
