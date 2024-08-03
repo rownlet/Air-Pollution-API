@@ -1,4 +1,4 @@
-# Proyecto de Análisis de Datos de Contaminación del Aire
+# Proyecto API de Contaminación del Aire
 
 ## Descripción General
 Este proyecto tiene como objetivo analizar datos de contaminación del aire extrayéndolos de una API, transformándolos y cargándolos en una base de datos Amazon Redshift para un análisis posterior. El proyecto está estructurado para facilitar los procesos de extracción, transformación y carga de datos (ETL) utilizando scripts en Python y cuadernos de Jupyter.
