@@ -5,10 +5,33 @@ import pandas as pd
 from datetime import datetime
 import psycopg2
 import psycopg2.extras as extras
-from sqlalchemy import create_engine
+
+# Función para leer la clave de API desde api_key.txt
+def api_key_from_file():
+    """
+    Lee la clave de API desde el archivo api_key.txt.
+
+    :return: La clave de API como una cadena de texto.
+    """
+    try:
+        with open("api_key.txt", 'r') as file:
+            api_key = file.read().strip()
+        return api_key
+    except FileNotFoundError:
+        print("El archivo api_key.txt no se encuentra. Por favor suba el archivo con la clave de API.")
+        return None
 
 def extract_data_from_api(api_key, lat, lon, start_date, end_date):
-    """Extract data from the air pollution API."""
+    """
+    Extrae datos de la API de contaminación del aire.
+
+    :param api_key: Clave de API para autenticar la solicitud.
+    :param lat: Latitud de la ubicación.
+    :param lon: Longitud de la ubicación.
+    :param start_date: Fecha de inicio (objeto datetime).
+    :param end_date: Fecha de fin (objeto datetime).
+    :return: Datos de contaminación del aire en formato JSON.
+    """
     start_unix = int(start_date.timestamp())
     end_unix = int(end_date.timestamp())
     
@@ -29,6 +52,12 @@ def extract_data_from_api(api_key, lat, lon, start_date, end_date):
         response.raise_for_status()
 
 def transform_data(raw_data):
+    """
+    Transforma los datos crudos de contaminación del aire en un DataFrame de pandas.
+
+    :param raw_data: Datos crudos de contaminación del aire en formato JSON.
+    :return: DataFrame de pandas con los datos transformados.
+    """
     for item in raw_data['list']:
         item['dt'] = datetime.fromtimestamp(item['dt']).strftime('%Y-%m-%d')
 
@@ -50,8 +79,29 @@ def transform_data(raw_data):
 
     return df_agrupado
 
+# Función para leer la contraseña desde pwd_redshift.txt
+def pwd_from_file():
+    """
+    Lee la contraseña desde el archivo pwd_redshift.txt.
+
+    :return: La contraseña como una cadena de texto.
+    """
+    try:
+        with open("pwd_redshift.txt", 'r') as file:
+            password = file.read().strip()
+        return password
+    except FileNotFoundError:
+        print("El archivo pwd_redshift.txt no se encuentra. Por favor suba el archivo con la contraseña.")
+        return None
+
 def load_data_to_redshift(df, table_name, redshift_credentials):
-    """Load DataFrame into Amazon Redshift."""
+    """
+    Carga un DataFrame en Amazon Redshift.
+
+    :param df: DataFrame de pandas con los datos a cargar.
+    :param table_name: Nombre de la tabla en Redshift.
+    :param redshift_credentials: Diccionario con las credenciales de Redshift.
+    """
     conn = psycopg2.connect(
         host=redshift_credentials['host'],
         dbname=redshift_credentials['dbname'],
@@ -82,9 +132,16 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
         conn.commit()
 
     def execute_values(conn, df, table):
+        """
+        Inserta múltiples filas en una tabla de Redshift.
+
+        :param conn: Conexión a la base de datos.
+        :param df: DataFrame de pandas con los datos a insertar.
+        :param table: Nombre de la tabla en Redshift.
+        """
         tuples = [tuple(x) for x in df.to_numpy()]
         cols = ','.join(list(df.columns))
-        query  = f"INSERT INTO {table}({cols}) VALUES %s"
+        query = f"INSERT INTO {table}({cols}) VALUES %s"
         cursor = conn.cursor()
         try:
             extras.execute_values(cursor, query, tuples)

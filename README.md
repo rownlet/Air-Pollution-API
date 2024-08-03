@@ -1,4 +1,4 @@
-# Proyecto API de Contaminación del Aire
+# Proyecto de Análisis de Datos de Contaminación del Aire
 
 ## Descripción General
 Este proyecto tiene como objetivo analizar datos de contaminación del aire extrayéndolos de una API, transformándolos y cargándolos en una base de datos Amazon Redshift para un análisis posterior. El proyecto está estructurado para facilitar los procesos de extracción, transformación y carga de datos (ETL) utilizando scripts en Python y cuadernos de Jupyter.
@@ -6,7 +6,7 @@ Este proyecto tiene como objetivo analizar datos de contaminación del aire extr
 ## Estructura del Proyecto
 El proyecto consta de los siguientes archivos:
 
-- `air_pollution_etl.ipynb`: Cuaderno de Jupyter para ejecutar los procesos de extracción, transformación y carga de datos.
+- `air_pollution_data_analysis.ipynb`: Cuaderno de Jupyter para ejecutar los procesos de extracción, transformación y carga de datos.
 - `functions.py`: Script en Python que contiene las funciones utilizadas para extraer datos de la API, transformar los datos y cargarlos en Redshift.
 - `pwd_redshift.txt`: Archivo de texto que contiene la contraseña para la base de datos Redshift.
 
@@ -24,8 +24,8 @@ Para configurar el proyecto, siga estos pasos:
 ### Instalación
 1. Clone el repositorio en su máquina local:
     ```sh
-    git clone https://github.com/rownlet/Air-Pollution-API.git
-    cd Air-Pollution-API
+    git clone https://github.com/tu-repo/analisis-datos-contaminacion-aire.git
+    cd analisis-datos-contaminacion-aire
     ```
 
 2. Instale las bibliotecas de Python necesarias:
@@ -68,10 +68,13 @@ Si desea basarse en los datos o en este proyecto para crear un nuevo proyecto, a
 No dude en abrir un issue o enviar una pull request con sus sugerencias.
 
 ## Contribuciones
-Si desea contribuir al proyecto, siga estos pasos:
+Si desea contribuir a este proyecto, siga estos pasos:
 
 1. Haga un fork del repositorio.
 2. Cree una nueva rama (`git checkout -b feature-branch`).
 3. Realice sus cambios y haga commit (`git commit -am 'Agregar nueva característica'`).
 4. Empuje a la rama (`git push origin feature-branch`).
 5. Cree una nueva Pull Request.
+
+## Agradecimientos
+Nos gustaría agradecer a los desarrolladores de las bibliotecas y herramientas utilizadas en este proyecto, y a la comunidad por su apoyo continuo y contribuciones.
