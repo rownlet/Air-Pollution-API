@@ -159,11 +159,5 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
         # Ejecutar la inserción de los datos
         execute_values(cur, df, table_name)
 
-        # Seleccionar y mostrar los datos
-        cur.execute(f"SELECT * FROM {table_name}")
-        results = cur.fetchall()
-        for row in results:
-            print(row)
-
     # Cerrar la conexión
     conn.close()
