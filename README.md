@@ -1,4 +1,4 @@
-# Proyecto API de Contaminación del Aire
+# Proyecto de Análisis de Datos de Contaminación del Aire
 
 ## Descripción General
 Este proyecto tiene como objetivo analizar datos de contaminación del aire extrayéndolos de una API, transformándolos y cargándolos en una base de datos Amazon Redshift para un análisis posterior. El proyecto está estructurado para facilitar los procesos de extracción, transformación y carga de datos (ETL) utilizando scripts en Python y cuadernos de Jupyter.
@@ -34,8 +34,7 @@ Para configurar el proyecto, siga estos pasos:
     ```
 
 ### Configuración
-1. Abra el archivo `pwd_redshift.txt` y reemplace el texto de marcador de posición con su contraseña real de Redshift.
-2. Actualice el archivo `functions.py` y el cuaderno de Jupyter con su clave de API y credenciales de Redshift.
+1. Abra el archivo `.env` y reemplace el texto con su API_KEY y credenciales de Redshift. 
 
 ### Ejecución del Proyecto
 1. Abra el cuaderno de Jupyter:

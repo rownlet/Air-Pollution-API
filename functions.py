@@ -62,9 +62,9 @@ def transform_data(raw_data):
         item['dt'] = datetime.fromtimestamp(item['dt']).strftime('%Y-%m-%d')
 
     df = pd.json_normalize(raw_data, 'list', ['coord'])
-    df_agrupado = df.drop('coord', axis=1).groupby('dt', as_index=False).mean()
+    df = df.drop('coord', axis=1)
 
-    df_agrupado.rename(columns={
+    df.rename(columns={
         'dt': 'date',
         'main.aqi': 'aqi',
         'components.co': 'co',
@@ -77,7 +77,7 @@ def transform_data(raw_data):
         'components.nh3': 'nh3'
     }, inplace=True)
 
-    return df_agrupado
+    return df
 
 # Función para leer la contraseña desde pwd_redshift.txt
 def pwd_from_file():
@@ -102,6 +102,7 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
     :param table_name: Nombre de la tabla en Redshift.
     :param redshift_credentials: Diccionario con las credenciales de Redshift.
     """
+    # Conectar a la base de datos de Redshift
     conn = psycopg2.connect(
         host=redshift_credentials['host'],
         dbname=redshift_credentials['dbname'],
@@ -109,10 +110,13 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
         password=redshift_credentials['password'],
         port=redshift_credentials['port']
     )
+    
+    # Abrir un cursor para ejecutar comandos SQL
     with conn.cursor() as cur:
+        # Crear la tabla si no existe
         cur.execute(f"""
             CREATE TABLE IF NOT EXISTS {table_name} (
-                date VARCHAR,
+                date VARCHAR PRIMARY KEY,
                 aqi FLOAT,
                 co FLOAT,
                 no FLOAT,
@@ -127,40 +131,39 @@ def load_data_to_redshift(df, table_name, redshift_credentials):
         """)
         conn.commit()
 
-    with conn.cursor() as cur:
+        # Vaciar la tabla
         cur.execute(f"TRUNCATE TABLE {table_name}")
         conn.commit()
 
-    def execute_values(conn, df, table):
-        """
-        Inserta múltiples filas en una tabla de Redshift.
+        # Inserta los datos en la tabla
+        def execute_values(cur, df, table):
+            """
+            Inserta múltiples filas en una tabla de Redshift.
 
-        :param conn: Conexión a la base de datos.
-        :param df: DataFrame de pandas con los datos a insertar.
-        :param table: Nombre de la tabla en Redshift.
-        """
-        tuples = [tuple(x) for x in df.to_numpy()]
-        cols = ','.join(list(df.columns))
-        query = f"INSERT INTO {table}({cols}) VALUES %s"
-        cursor = conn.cursor()
-        try:
-            extras.execute_values(cursor, query, tuples)
-            conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print("Error: %s" % error)
-            conn.rollback()
-            cursor.close()
-            return 1
-        print("La inserción fue exitosa")
-        cursor.close()
+            :param cur: Cursor de la base de datos.
+            :param df: DataFrame de pandas con los datos a insertar.
+            :param table: Nombre de la tabla en Redshift.
+            """
+            tuples = [tuple(x) for x in df.to_numpy()]
+            cols = ','.join(list(df.columns))
+            query = f"INSERT INTO {table}({cols}) VALUES %s"
+            try:
+                extras.execute_values(cur, query, tuples)
+                conn.commit()
+            except (Exception, psycopg2.DatabaseError) as error:
+                print("Error: %s" % error)
+                conn.rollback()
+                return 1
+            print("La inserción fue exitosa")
 
-    execute_values(conn, df, table_name)
+        # Ejecutar la inserción de los datos
+        execute_values(cur, df, table_name)
 
-    with conn.cursor() as cur:
+        # Seleccionar y mostrar los datos
         cur.execute(f"SELECT * FROM {table_name}")
         results = cur.fetchall()
         for row in results:
             print(row)
-        cur.close()
 
+    # Cerrar la conexión
     conn.close()
