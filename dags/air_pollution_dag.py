@@ -36,6 +36,7 @@ dag = DAG(
     default_args=default_args,
     description='DAG para ETL de datos de contaminación del aire',
     schedule_interval=timedelta(days=1),
+    catchup=False,
 )
 
 # Funciones ETL para Airflow
