@@ -3,6 +3,7 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
+import logging
 from functions import extract_data_from_api, transform_data, load_data_to_redshift
 
 # Cargar las variables de entorno desde el archivo .env
@@ -12,9 +13,9 @@ load_dotenv()
 api_key = os.getenv('api_key')
 pwd_redshift = os.getenv('pwd_redshift')
 
-# Debugging: Verificar que las variables se han cargado correctamente
-print(f"API Key Loaded: {api_key}")
-print(f"Redshift Password Loaded: {pwd_redshift}")
+# Debugging: Verificar que las variables se han cargado correctamente utilizando logging
+logging.info(f"API Key Loaded: {api_key}")
+logging.info(f"Redshift Password Loaded: {pwd_redshift}")
 
 if not api_key or not pwd_redshift:
     raise ValueError("Las variables de entorno no se han cargado correctamente.")
@@ -71,7 +72,6 @@ def conexion_redshift(**kwargs):
 task_1 = PythonOperator(
     task_id='extraer_datos',
     python_callable=extraer_datos,
-    provide_context=True,
     dag=dag,
 )
 
@@ -79,7 +79,6 @@ task_1 = PythonOperator(
 task_2 = PythonOperator(
     task_id='transformar_datos',
     python_callable=transformar_datos,
-    provide_context=True,
     dag=dag,
 )
 
@@ -87,7 +86,6 @@ task_2 = PythonOperator(
 task_3 = PythonOperator(
     task_id='conexion_redshift',
     python_callable=conexion_redshift,
-    provide_context=True,
     dag=dag,
 )
 
