@@ -63,27 +63,21 @@ Para poner en marcha este proyecto, asegúrese de contar con los siguientes requ
 
     Una vez que los servicios estén activos, acceda a la interfaz web de Airflow. Desde allí, puede activar el DAG `BC_dag` para ejecutar el flujo de trabajo ETL de manera automatizada.
 
-3. **Ejecución Automatizada:**
+### Solución de Problemas
 
-    El flujo ETL se ejecutará según la programación definida en el DAG, garantizando la recolección continua de datos frescos.
+Si tiene problemas para iniciar sesión en la interfaz web de Airflow con las credenciales por defecto, puede crear un nuevo usuario administrador ejecutando el siguiente comando en su terminal:
+
+`docker-compose run webserver airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin`
 
 ## Mejora Continua
 
 Estamos comprometidos con la mejora continua de este proyecto. Algunas sugerencias para futuros desarrollos incluyen:
 
-1. **Robustez en el Manejo de Errores:**
-
-    Implementar un manejo de errores más avanzado durante los procesos de extracción y carga, garantizando la resiliencia del sistema.
-
-2. **Visualización de Datos:**
-
-    Integrar dashboards y visualizaciones que permitan una interpretación más clara y rápida de los datos de contaminación.
-
-3. **Pruebas Unitarias:**
+1. **Pruebas Unitarias:**
 
     Desarrollar un conjunto de pruebas unitarias para las funciones en `functions.py`, asegurando la calidad y el funcionamiento esperado del código.
 
-4. **Automatización y Escalabilidad:**
+2. **Automatización y Escalabilidad:**
 
     Considerar la expansión de la automatización, incorporando técnicas de escalabilidad horizontal para manejar volúmenes de datos mayores.
 
@@ -106,10 +100,6 @@ Este proyecto puede ser la base para nuevas iniciativas. Algunas ideas incluyen:
 4. **Desarrollo de Aplicaciones:**
 
     Crear una aplicación móvil que ofrezca actualizaciones en tiempo real sobre la calidad del aire, personalizadas por ubicación.
-
-5. **Generación de Informes Automáticos:**
-
-    Automatizar la creación y distribución de informes detallados sobre la calidad del aire a los stakeholders clave.
 
 ## Contribuciones
 
