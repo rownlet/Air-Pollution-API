@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   webserver:
-    build: .
+    image: apache/airflow:2.10.0
     container_name: airflow_webserver
     ports:
       - "8080:8080"
@@ -16,11 +16,13 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     depends_on:
       - postgres
+      - airflow-init
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 5
+    command: "airflow webserver"   # Comando correcto para iniciar el webserver
     restart: always
 
   postgres:
@@ -51,9 +53,15 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - api_key=${api_key}
+      - pwd_redshift=${pwd_redshift}
+    env_file:
+      - ./.env  # Asegúrate de montar el archivo .env aquí
+      
     depends_on:
       - postgres
-    command: "airflow scheduler"
+      - airflow-init
+    command: "airflow scheduler"  # Comando correcto para iniciar el scheduler
     restart: always
 
   airflow-init:
@@ -67,7 +75,7 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-    command: "airflow db init"
+    command: "airflow db init"  # Comando correcto para inicializar la base de datos
     depends_on:
       - postgres
     restart: "no"
