@@ -14,6 +14,10 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - api_key=${api_key}  # Variables de entorno desde .env
+      - pwd_redshift=${pwd_redshift}
+    env_file:
+      - ./.env  # Montar el archivo .env
     depends_on:
       - postgres
       - airflow-init
@@ -22,7 +26,11 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-    command: "airflow webserver"   # Comando correcto para iniciar el webserver
+    command: >
+      bash -c "
+      airflow db upgrade &&
+      airflow users create --username airflow --password airflow --firstname Airflow --lastname Admin --role Admin --email airflow@example.com &&
+      airflow webserver"
     restart: always
 
   postgres:
@@ -53,15 +61,17 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - api_key=${api_key}
+      - api_key=${api_key}  # Variables de entorno desde .env
       - pwd_redshift=${pwd_redshift}
+      - email_user=${email_user}
+      - email_code=${email_code}
+      - email_to=${email_to}
     env_file:
-      - ./.env  # Asegúrate de montar el archivo .env aquí
-      
+      - ./.env  # Montar el archivo .env
     depends_on:
       - postgres
       - airflow-init
-    command: "airflow scheduler"  # Comando correcto para iniciar el scheduler
+    command: "airflow scheduler"
     restart: always
 
   airflow-init:
@@ -75,7 +85,9 @@ services:
       - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-    command: "airflow db init"  # Comando correcto para inicializar la base de datos
+    env_file:
+      - ./.env  # Montar el archivo .env
+    command: "airflow db init"
     depends_on:
       - postgres
     restart: "no"
